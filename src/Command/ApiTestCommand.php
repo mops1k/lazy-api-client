@@ -53,15 +53,12 @@ class ApiTestCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $client  = $this->apiClientManager->get(Client::class);
-        $listQuery = $client->use(ListUsersQuery::class);
-        $request = $listQuery->getRequest();
-        $request->getParameters()->set('page', 1);
-        $request->getParameters()->set('per_page', 12);
+        $client->use(ListUsersQuery::class);
         $listResult = $client->execute();
 
         $sigleUserQuery = $client->use(SingleUserQuery::class);
         $request = $sigleUserQuery->getRequest();
-        $request->getParameters()->set('id', 110);
+        $request->getParameters()->set('id', 11);
         $singleUserResult = $client->execute();
 
         var_dump($listResult->getContent());
