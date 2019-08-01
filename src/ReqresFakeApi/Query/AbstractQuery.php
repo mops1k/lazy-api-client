@@ -1,0 +1,27 @@
+<?php
+declare(strict_types=1);
+
+namespace App\ReqresFakeApi\Query;
+
+use App\ApiClient\AbstractQuery as BaseAbstractQuery;
+use App\ReqresFakeApi\Client;
+use App\ReqresFakeApi\StringResponse;
+
+/**
+ * Class AbstractQuery
+ */
+abstract class AbstractQuery extends BaseAbstractQuery
+{
+    /**
+     * @return string
+     */
+    public function getResponseClassName(): string
+    {
+        return StringResponse::class;
+    }
+
+    public function supportedClients(): array
+    {
+        return [Client::class];
+    }
+}
