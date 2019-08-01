@@ -13,9 +13,9 @@ interface ClientInterface
     /**
      * @param string $queryClass
      *
-     * @return QueryInterface
+     * @return void
      */
-    public function use(string $queryClass): QueryInterface;
+    public function use(string $queryClass): void;
 
     /**
      * @return string

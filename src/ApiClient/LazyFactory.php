@@ -69,6 +69,6 @@ class LazyFactory
             return true;
         };
 
-        return $this->lazyFactory->createProxy($client->getCurrentQuery()->getResponseClassName(), $initializer);
+        return clone $this->lazyFactory->createProxy($client->getCurrentQuery()->getResponseClassName(), $initializer);
     }
 }

@@ -6,7 +6,6 @@ namespace App\ApiClient;
 use App\ApiClient\Exception\ResponseNotFoundException;
 use App\ApiClient\Interfaces\QueryInterface;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
@@ -46,8 +45,6 @@ class Pool
      */
     public function execute(): void
     {
-        $this->responses = [];
-
         /** @var PromiseInterface[] $promises */
         $promises = [];
         foreach ($this->pool as $query) {
@@ -57,7 +54,7 @@ class Pool
 
             $uri = $query->buildUri();
             if (!\array_key_exists($query->getHashKey(), $this->httpClients)) {
-                $this->httpClients[$query->getHashKey()] = new Client(\array_merge([
+                $this->httpClients[\get_class($query->getClient())] = new Client(\array_merge([
                     'base_uri' => $query->getClient()->getBaseUri()
                 ], $query->getClient()->getOptions()));
             }
@@ -65,7 +62,7 @@ class Pool
             $request = $query->getRequest();
             $httpRequest = new Request($query->getMethod(), $uri, $request->getHeaders()->all(), $request->getBody());
 
-            $promise = $this->httpClients[$query->getHashKey()]->sendAsync($httpRequest, $query->getRequest()->getOptions());
+            $promise = $this->httpClients[\get_class($query->getClient())]->sendAsync($httpRequest, $query->getRequest()->getOptions());
             $promise->then(function (ResponseInterface $response) use ($query) {
                 $this->responses[$query->getHashKey()] = [
                     'headers' => $response->getHeaders(),
@@ -73,19 +70,12 @@ class Pool
                     'content' => $response->getBody()->getContents(),
                     $response
                 ];
-            }, function (ClientException $reason) use ($query) {
-                $response = $reason->getResponse();
-                $this->responses[$query->getHashKey()] = [
-                    'headers' => $response ? $response->getHeaders() : [],
-                    'statusCode' => $response ? $response->getStatusCode() : $reason->getCode(),
-                    'content' => $response ? $response->getBody()->getContents() : $reason->getMessage(),
-                ];
             });
             $promises[] = $promise;
         }
 
         foreach ($promises as $promise) {
-            $promise->wait(false);
+            $promise->wait();
         }
     }
 

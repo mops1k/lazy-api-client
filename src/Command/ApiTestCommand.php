@@ -56,8 +56,8 @@ class ApiTestCommand extends Command
         $client->use(ListUsersQuery::class);
         $listResult = $client->execute();
 
-        $sigleUserQuery = $client->use(SingleUserQuery::class);
-        $request = $sigleUserQuery->getRequest();
+        $client->use(SingleUserQuery::class);
+        $request = $client->getCurrentQuery()->getRequest();
         $request->getParameters()->set('id', 11);
         $singleUserResult = $client->execute();
 
