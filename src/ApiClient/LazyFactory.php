@@ -25,6 +25,11 @@ class LazyFactory
     private $lazyFactory;
 
     /**
+     * @var Pool
+     */
+    private $apiPool;
+
+    /**
      * ApiLazyFactory constructor.
      *
      * @param Pool $apiPool
@@ -32,20 +37,7 @@ class LazyFactory
     public function __construct(Pool $apiPool)
     {
         $this->lazyFactory  = new LazyLoadingGhostFactory();
-        $this->initializer = function (
-            GhostObjectInterface $ghostObject,
-            string $method,
-            array $parameters,
-            &$initializer,
-            array $properties
-        ) use ($apiPool) {
-            /** @var ResponseInterface $ghostObject */
-            $initializer = null;
-            $apiPool->execute();
-            $properties["\0*\0content"] = $apiPool->getResponseForQuery($ghostObject::getQuery());
-
-            return true;
-        };
+        $this->apiPool      = $apiPool;
     }
 
     /**
@@ -55,9 +47,21 @@ class LazyFactory
      */
     public function create(ClientInterface $client): GhostObjectInterface
     {
-        $responseClass = $client->getCurrentQuery()->getResponseClassName();
-        $responseClass::setQuery($client->getCurrentQuery());
+        $initializer = function (
+            GhostObjectInterface $ghostObject,
+            string $method,
+            array $parameters,
+            &$initializer,
+            array $properties
+        ) use ($client) {
+            /** @var ResponseInterface $ghostObject */
+            $initializer = null;
+            $this->apiPool->execute();
+            $properties["\0*\0content"] = $this->apiPool->getResponseForQuery($client->getCurrentQuery());
 
-        return $this->lazyFactory->createProxy($client->getCurrentQuery()->getResponseClassName(), $this->initializer);
+            return true;
+        };
+
+        return $this->lazyFactory->createProxy($client->getCurrentQuery()->getResponseClassName(), $initializer);
     }
 }

@@ -86,7 +86,7 @@ abstract class AbstractClient implements ClientInterface
     {
         $this->pool->add($this->query);
 
-        return $this->lazyFactory->create($this);
+        return $this->lazyFactory->create(clone $this);
     }
 
     /**

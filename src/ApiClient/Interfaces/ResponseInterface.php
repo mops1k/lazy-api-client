@@ -12,9 +12,4 @@ interface ResponseInterface
      * @return mixed
      */
     public function getContent(): string;
-
-    /**
-     * @return QueryInterface
-     */
-    public static function getQuery(): QueryInterface;
 }
