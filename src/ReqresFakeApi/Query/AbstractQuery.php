@@ -20,6 +20,9 @@ abstract class AbstractQuery extends BaseAbstractQuery
         return StringResponse::class;
     }
 
+    /**
+     * @return array
+     */
     public function supportedClients(): array
     {
         return [Client::class];
