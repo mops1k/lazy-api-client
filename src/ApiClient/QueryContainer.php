@@ -11,6 +11,8 @@ use App\ApiClient\Interfaces\QueryInterface;
  */
 class QueryContainer
 {
+    public const TAG = 'api_client.query';
+
     /**
      * @var QueryInterface[]
      */

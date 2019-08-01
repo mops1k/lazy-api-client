@@ -11,6 +11,8 @@ use App\ApiClient\Interfaces\ClientInterface;
  */
 class Manager
 {
+    public const TAG = 'api_client.client';
+
     /**
      * @var ClientInterface[]
      */

@@ -10,7 +10,6 @@ use ProxyManager\Proxy\GhostObjectInterface;
  */
 interface ClientInterface
 {
-    public const TAG = 'api_client.client';
     /**
      * @param string $queryClass
      *

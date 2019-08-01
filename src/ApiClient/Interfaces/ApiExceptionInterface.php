@@ -8,5 +8,4 @@ namespace App\ApiClient\Interfaces;
  */
 interface ApiExceptionInterface
 {
-    public const CODE = 404;
 }

@@ -4,8 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    api.query_tag:  !php/const 'App\ApiClient\Interfaces\QueryInterface::TAG'
-    api.client_tag: !php/const 'App\ApiClient\Interfaces\ClientInterface::TAG'
+    api.query_tag:  !php/const 'App\ApiClient\QueryContainer::TAG'
+    api.client_tag: !php/const 'App\ApiClient\Manager::TAG'
 
 services:
     # default configuration for services in *this* file
@@ -32,13 +32,13 @@ services:
     _instanceof:
         # services whose classes are instances of CustomInterface will be tagged automatically
         App\ApiClient\Interfaces\QueryInterface:
-            tags: ['api_client.query']
+            tags: ['%api.query_tag%']
 
         App\ApiClient\Interfaces\ClientInterface:
-            tags: ['api_client.client']
+            tags: ['%api.client_tag%']
 
     App\ApiClient\QueryContainer:
-        arguments: [!tagged 'api_client.query']
+        arguments: [!tagged '%api.query_tag%']
 
     App\ApiClient\Manager:
-        arguments: [!tagged 'api_client.client']
+        arguments: [!tagged '%api.client_tag%']

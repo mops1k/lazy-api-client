@@ -10,8 +10,6 @@ use App\ApiClient\Request;
  */
 interface QueryInterface
 {
-    public const TAG = 'api_client.query';
-
     /**
      * @return string
      */
