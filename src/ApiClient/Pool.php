@@ -57,15 +57,15 @@ class Pool
 
             $uri = $query->buildUri();
             if (!\array_key_exists($query->getHashKey(), $this->httpClients)) {
-                $this->httpClients[$query->getHashKey()] = new Client([
+                $this->httpClients[$query->getHashKey()] = new Client(\array_merge([
                     'base_uri' => $query->getClient()->getBaseUri()
-                ]);
+                ], $query->getClient()->getOptions()));
             }
 
             $request = $query->getRequest();
             $httpRequest = new Request($query->getMethod(), $uri, $request->getHeaders()->all(), $request->getBody());
 
-            $promise = $this->httpClients[$query->getHashKey()]->sendAsync($httpRequest);
+            $promise = $this->httpClients[$query->getHashKey()]->sendAsync($httpRequest, $query->getRequest()->getOptions());
             $promise->then(function (ResponseInterface $response) use ($query) {
                 $this->responses[$query->getHashKey()] = [
                     'headers' => $response->getHeaders(),
