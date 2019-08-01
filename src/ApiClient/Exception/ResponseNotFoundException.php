@@ -11,6 +11,8 @@ use Throwable;
  */
 class ResponseNotFoundException extends \Exception implements ApiExceptionInterface
 {
+    public const CODE = 500;
+
     /**
      * ClientNotFoundException constructor.
      *
@@ -19,6 +21,6 @@ class ResponseNotFoundException extends \Exception implements ApiExceptionInterf
      */
     public function __construct($code = self::CODE, Throwable $previous = null)
     {
-        parent::__construct('Response for query are not found', $code, $previous);
+        parent::__construct('Response for query are not found!', $code, $previous);
     }
 }

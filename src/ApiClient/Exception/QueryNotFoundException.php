@@ -11,6 +11,8 @@ use Throwable;
  */
 class QueryNotFoundException extends \Exception implements ApiExceptionInterface
 {
+    public const CODE = 500;
+
     /**
      * ClientNotFoundException constructor.
      *

@@ -13,6 +13,8 @@ use Throwable;
  */
 class ClientNotSupportedException extends \Exception implements ApiExceptionInterface
 {
+    public const CODE = 400;
+
     /**
      * ClientNotFoundException constructor.
      *
