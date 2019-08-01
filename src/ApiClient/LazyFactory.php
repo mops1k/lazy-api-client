@@ -56,8 +56,13 @@ class LazyFactory
         ) use ($client) {
             /** @var ResponseInterface $ghostObject */
             $initializer = null;
+
             $this->apiPool->execute();
-            $properties["\0*\0content"] = $this->apiPool->getResponseForQuery($client->getCurrentQuery());
+            $response = $this->apiPool->getResponseForQuery($client->getCurrentQuery());
+
+            $properties["\0*\0content"]    = $response->getBody()->getContents();
+            $properties["\0*\0statusCode"] = $response->getStatusCode();
+            $properties["\0*\0headers"]    = $response->getHeaders();
 
             return true;
         };

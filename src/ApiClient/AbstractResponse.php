@@ -10,11 +10,42 @@ use App\ApiClient\Interfaces\ResponseInterface;
  */
 abstract class AbstractResponse implements ResponseInterface
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $content;
 
+    /**
+     * @var array|string[][]
+     */
+    protected $headers;
+
+    /**
+     * @var int
+     */
+    protected $statusCode;
+
+    /**
+     * @return string
+     */
     public function getContent(): string
     {
         return $this->content;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusCode(): int
+    {
+        return $this->statusCode;
     }
 }

@@ -25,7 +25,7 @@ class Pool
      */
     private $httpClients = [];
 
-    /** @var array */
+    /** @var ResponseInterface[] */
     private $responses = [];
 
     /**
@@ -59,7 +59,7 @@ class Pool
 
             $promise = $this->httpClients[$query->getHashKey()]->sendAsync($httpRequest);
             $promise->then(function (ResponseInterface $response) use ($query) {
-                $this->responses[$query->getHashKey()] = $response->getBody()->getContents();
+                $this->responses[$query->getHashKey()] = $response;
             });
             $promises[] = $promise;
         }
@@ -72,11 +72,11 @@ class Pool
     /**
      * @param QueryInterface $query
      *
-     * @return string
+     * @return ResponseInterface
      *
      * @throws ResponseNotFoundException
      */
-    public function getResponseForQuery(QueryInterface $query): string
+    public function getResponseForQuery(QueryInterface $query): ResponseInterface
     {
         if (!\array_key_exists($query->getHashKey(), $this->responses)) {
             throw new ResponseNotFoundException();

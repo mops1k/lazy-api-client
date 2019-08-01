@@ -9,7 +9,17 @@ namespace App\ApiClient\Interfaces;
 interface ResponseInterface
 {
     /**
-     * @return mixed
+     * @return string
      */
     public function getContent(): string;
+
+    /**
+     * @return int
+     */
+    public function getStatusCode(): int;
+
+    /**
+     * @return array|string[][]
+     */
+    public function getHeaders(): array;
 }

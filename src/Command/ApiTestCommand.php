@@ -64,7 +64,7 @@ class ApiTestCommand extends Command
         $request->getParameters()->set('id', 11);
         $singleUserResult = $client->execute();
 
-        var_dump($listResult->getContent());
-        var_dump($singleUserResult->getContent());
+        var_dump($listResult->getStatusCode());
+        var_dump($singleUserResult->getHeaders());
     }
 }
