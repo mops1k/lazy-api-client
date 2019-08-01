@@ -28,7 +28,7 @@ abstract class AbstractClient implements ClientInterface
     private $queryContainer;
 
     /**
-     * @var Pool
+     * @var HttpQueue
      */
     private $pool;
 
@@ -41,10 +41,10 @@ abstract class AbstractClient implements ClientInterface
      * Client constructor.
      *
      * @param QueryContainer $queryContainer
-     * @param Pool           $pool
+     * @param HttpQueue      $pool
      * @param LazyFactory    $lazyFactory
      */
-    public function __construct(QueryContainer $queryContainer, Pool $pool, LazyFactory $lazyFactory)
+    public function __construct(QueryContainer $queryContainer, HttpQueue $pool, LazyFactory $lazyFactory)
     {
         $this->queryContainer = $queryContainer;
         $this->pool = $pool;

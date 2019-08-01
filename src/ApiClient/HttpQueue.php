@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Class ApiPool
  */
-class Pool
+class HttpQueue
 {
     /**
      * @var QueryInterface[]
@@ -75,8 +75,12 @@ class Pool
         }
 
         foreach ($promises as $promise) {
-            $promise->wait();
+            $promise->wait(true);
         }
+
+        // clear pool and clients after execute
+        $this->pool = [];
+        $this->httpClients = [];
     }
 
     /**

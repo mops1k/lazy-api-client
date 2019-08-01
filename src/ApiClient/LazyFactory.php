@@ -25,16 +25,16 @@ class LazyFactory
     private $lazyFactory;
 
     /**
-     * @var Pool
+     * @var HttpQueue
      */
     private $apiPool;
 
     /**
      * LazyFactory constructor.
      *
-     * @param Pool $apiPool
+     * @param HttpQueue $apiPool
      */
-    public function __construct(Pool $apiPool)
+    public function __construct(HttpQueue $apiPool)
     {
         $this->lazyFactory  = new LazyLoadingGhostFactory();
         $this->apiPool      = $apiPool;
