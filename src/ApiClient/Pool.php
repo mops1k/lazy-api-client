@@ -6,6 +6,7 @@ namespace App\ApiClient;
 use App\ApiClient\Exception\ResponseNotFoundException;
 use App\ApiClient\Interfaces\QueryInterface;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
@@ -25,10 +26,14 @@ class Pool
      */
     private $httpClients = [];
 
-    /** @var ResponseInterface[] */
+    /**
+     * @var ResponseInterface[]
+     */
     private $responses = [];
 
     /**
+     * Add query to pool
+     *
      * @param QueryInterface $query
      */
     public function add(QueryInterface $query): void
@@ -36,6 +41,9 @@ class Pool
         $this->pool[] = $query;
     }
 
+    /**
+     * Execute queue requests pool
+     */
     public function execute(): void
     {
         $this->responses = [];
@@ -59,24 +67,38 @@ class Pool
 
             $promise = $this->httpClients[$query->getHashKey()]->sendAsync($httpRequest);
             $promise->then(function (ResponseInterface $response) use ($query) {
-                $this->responses[$query->getHashKey()] = $response;
+                $this->responses[$query->getHashKey()] = [
+                    'headers' => $response->getHeaders(),
+                    'statusCode' => $response->getStatusCode(),
+                    'content' => $response->getBody()->getContents(),
+                    $response
+                ];
+            }, function (ClientException $reason) use ($query) {
+                $response = $reason->getResponse();
+                $this->responses[$query->getHashKey()] = [
+                    'headers' => $response ? $response->getHeaders() : [],
+                    'statusCode' => $response ? $response->getStatusCode() : $reason->getCode(),
+                    'content' => $response ? $response->getBody()->getContents() : $reason->getMessage(),
+                ];
             });
             $promises[] = $promise;
         }
 
         foreach ($promises as $promise) {
-            $promise->wait();
+            $promise->wait(false);
         }
     }
 
     /**
+     * Returns response for executed query
+     *
      * @param QueryInterface $query
      *
-     * @return ResponseInterface
+     * @return array
      *
      * @throws ResponseNotFoundException
      */
-    public function getResponseForQuery(QueryInterface $query): ResponseInterface
+    public function getResponseForQuery(QueryInterface $query): array
     {
         if (!\array_key_exists($query->getHashKey(), $this->responses)) {
             throw new ResponseNotFoundException();

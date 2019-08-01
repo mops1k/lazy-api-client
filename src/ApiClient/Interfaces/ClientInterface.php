@@ -28,6 +28,11 @@ interface ClientInterface
     public function getCurrentQuery(): QueryInterface;
 
     /**
+     * @return array
+     */
+    public function getOptions(): array;
+
+    /**
      * @return GhostObjectInterface|ResponseInterface
      */
     public function execute(): GhostObjectInterface;

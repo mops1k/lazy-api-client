@@ -10,7 +10,7 @@ use ProxyManager\Factory\LazyLoadingGhostFactory;
 use ProxyManager\Proxy\GhostObjectInterface;
 
 /**
- * Class ApiLazyFactory
+ * Class LazyFactory
  */
 class LazyFactory
 {
@@ -30,7 +30,7 @@ class LazyFactory
     private $apiPool;
 
     /**
-     * ApiLazyFactory constructor.
+     * LazyFactory constructor.
      *
      * @param Pool $apiPool
      */
@@ -41,6 +41,8 @@ class LazyFactory
     }
 
     /**
+     * Return not initialized proxy response
+     *
      * @param QueryInterface $query
      *
      * @return GhostObjectInterface|ResponseInterface
@@ -60,9 +62,9 @@ class LazyFactory
             $this->apiPool->execute();
             $response = $this->apiPool->getResponseForQuery($client->getCurrentQuery());
 
-            $properties["\0*\0content"]    = $response->getBody()->getContents();
-            $properties["\0*\0statusCode"] = $response->getStatusCode();
-            $properties["\0*\0headers"]    = $response->getHeaders();
+            $properties["\0*\0content"]    = $response['content'];
+            $properties["\0*\0statusCode"] = $response['statusCode'];
+            $properties["\0*\0headers"]    = $response['headers'];
 
             return true;
         };

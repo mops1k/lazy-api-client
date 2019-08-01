@@ -61,7 +61,7 @@ class ApiTestCommand extends Command
 
         $sigleUserQuery = $client->use(SingleUserQuery::class);
         $request = $sigleUserQuery->getRequest();
-        $request->getParameters()->set('id', 11);
+        $request->getParameters()->set('id', 110);
         $singleUserResult = $client->execute();
 
         var_dump($listResult->getContent());

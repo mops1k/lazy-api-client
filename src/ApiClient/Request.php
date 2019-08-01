@@ -27,6 +27,11 @@ final class Request
     private $body;
 
     /**
+     * @var array
+     */
+    private $options = [];
+
+    /**
      * ApiRequest constructor.
      */
     public function __construct()
@@ -67,6 +72,26 @@ final class Request
     public function setBody(string $body)
     {
         $this->body = $body;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return Request
+     */
+    public function setOptions(array $options): Request
+    {
+        $this->options = $options;
 
         return $this;
     }

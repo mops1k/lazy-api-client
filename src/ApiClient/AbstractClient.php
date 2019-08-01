@@ -96,4 +96,12 @@ abstract class AbstractClient implements ClientInterface
     {
         return $this->query;
     }
+
+    /**
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        return [];
+    }
 }

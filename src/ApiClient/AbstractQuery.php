@@ -13,26 +13,33 @@ use App\ApiClient\Interfaces\RequestMethodInterface;
 abstract class AbstractQuery implements QueryInterface
 {
     /**
-     * @var string
-     */
-    private $buildedUri;
-
-    /**
      * @var Request
      */
     protected $apiRequest;
 
     /**
+     * @var string
+     */
+    private $buildedUri;
+
+    /**
      * @var ClientInterface
      */
-    private   $client;
+    private $client;
 
+    /**
+     * Supported clients for query
+     *
+     * @return array
+     */
     public function supportedClients(): array
     {
         return [];
     }
 
     /**
+     * Request for query
+     *
      * @return Request
      */
     public function getRequest(): Request
@@ -46,6 +53,8 @@ abstract class AbstractQuery implements QueryInterface
     }
 
     /**
+     * Set Query method
+     *
      * @return string
      */
     public function getMethod(): string
@@ -54,6 +63,8 @@ abstract class AbstractQuery implements QueryInterface
     }
 
     /**
+     * Building uri for query
+     *
      * @return string
      */
     public function buildUri(): string
@@ -81,6 +92,8 @@ abstract class AbstractQuery implements QueryInterface
     }
 
     /**
+     * GenerateHashKey
+     *
      * @return string
      */
     public function getHashKey(): string
@@ -92,6 +105,8 @@ abstract class AbstractQuery implements QueryInterface
     }
 
     /**
+     * Get client
+     *
      * @return ClientInterface
      */
     public function getClient(): ClientInterface
@@ -100,6 +115,8 @@ abstract class AbstractQuery implements QueryInterface
     }
 
     /**
+     * Set client (internal method)
+     *
      * @param ClientInterface $client
      *
      * @return static
@@ -111,6 +128,13 @@ abstract class AbstractQuery implements QueryInterface
         return $this;
     }
 
+    /**
+     * Check if query is support client where its executed
+     *
+     * @param ClientInterface $client
+     *
+     * @return bool
+     */
     public function isSupport(ClientInterface $client): bool
     {
         return !$this->supportedClients() || \in_array(\get_class($client), $this->supportedClients(), true);
