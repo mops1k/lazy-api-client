@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\RequestException;
 use LazyHttpClientBundle\Client\Manager;
 use App\ReqresFakeApi\Client;
 use App\ReqresFakeApi\Query\ListUsersQuery;
@@ -57,12 +55,19 @@ class ApiTestCommand extends Command
         $client->use(ListUsersQuery::class);
         $listResult = $client->execute();
 
+        $client = $this->apiClientManager->get(Client::class);
+        $client->use(ListUsersQuery::class);
+        $request = $client->getCurrentQuery()->getRequest();
+        $request->getParameters()->set('page', 2);
+        $listResult2 = $client->execute();
+
         $client->use(SingleUserQuery::class);
         $request = $client->getCurrentQuery()->getRequest();
         $request->getParameters()->set('id', 11);
         $singleUserResult = $client->execute();
 
         var_dump($listResult->getContent());
+        var_dump($listResult2->getContent());
         var_dump($singleUserResult->getContent());
     }
 }

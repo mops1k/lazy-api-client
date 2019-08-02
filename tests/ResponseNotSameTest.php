@@ -27,12 +27,24 @@ class ResponseNotSameTest extends KernelTestCase
         $client->use(ListUsersQuery::class);
         $listResult = $client->execute();
 
+        $client->use(ListUsersQuery::class);
+        $request = $client->getCurrentQuery()->getRequest();
+        $request->getParameters()->set('page', 2);
+        $listResult2 = $client->execute();
+
+        $client->use(ListUsersQuery::class);
+        $request = $client->getCurrentQuery()->getRequest();
+        $request->getParameters()->set('page', 2);
+        $listResult3 = $client->execute();
+
         $client->use(SingleUserQuery::class);
         $request = $client->getCurrentQuery()->getRequest();
         $request->getParameters()->set('id', 11);
         $singleUserResult = $client->execute();
 
         $this->assertNotSame($listResult, $singleUserResult);
+        $this->assertNotSame($listResult, $listResult2);
+        $this->assertSame($listResult2, $listResult3);
         $this->assertNotEquals($listResult->getContent(), $singleUserResult->getContent());
     }
 }
