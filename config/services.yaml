@@ -4,8 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    api.query_tag:  !php/const 'App\ApiClient\QueryContainer::TAG'
-    api.client_tag: !php/const 'App\ApiClient\Manager::TAG'
+    api.query_tag:  !php/const 'LazyHttpClientBundle\Client\QueryContainer::TAG'
+    api.client_tag: !php/const 'LazyHttpClientBundle\Client\Manager::TAG'
 
 services:
     # default configuration for services in *this* file
@@ -30,15 +30,9 @@ services:
 
     # this config only applies to the services created by this file
     _instanceof:
-        # services whose classes are instances of CustomInterface will be tagged automatically
-        App\ApiClient\Interfaces\QueryInterface:
-            tags: ['%api.query_tag%']
-
-        App\ApiClient\Interfaces\ClientInterface:
-            tags: ['%api.client_tag%']
-
-    App\ApiClient\QueryContainer:
-        arguments: [!tagged '%api.query_tag%']
-
-    App\ApiClient\Manager:
-        arguments: [!tagged '%api.client_tag%']
+        App\ReqresFakeApi\Client:
+            tags: [!php/const LazyHttpClientBundle\Client\Manager::TAG]
+        App\ReqresFakeApi\Query\ListUsersQuery:
+            tags: [!php/const LazyHttpClientBundle\Client\QueryContainer::TAG]
+        App\ReqresFakeApi\Query\SingleUserQuery:
+            tags: [!php/const LazyHttpClientBundle\Client\QueryContainer::TAG]

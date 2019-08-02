@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ApiClient\Interfaces;
+namespace LazyHttpClientBundle\Interfaces;
 
-use App\ApiClient\Request;
+use LazyHttpClientBundle\Client\Request;
+use LazyHttpClientBundle\Interfaces\ClientInterface;
 
 /**
  * Class QueryInterface

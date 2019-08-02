@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ApiClient\Exception;
+namespace LazyHttpClientBundle\Exception;
 
-use App\ApiClient\Interfaces\ApiExceptionInterface;
+use LazyHttpClientBundle\Interfaces\ApiExceptionInterface;
 use Throwable;
 
 /**
@@ -16,15 +16,15 @@ class ClientNotFoundException extends \Exception implements ApiExceptionInterfac
     /**
      * ClientNotFoundException constructor.
      *
-     * @param string         $queryClassName
+     * @param string         $clientClassName
      * @param int            $code
      * @param Throwable|null $previous
      */
-    public function __construct(string $queryClassName, $code = self::CODE, Throwable $previous = null)
+    public function __construct(string $clientClassName, $code = self::CODE, Throwable $previous = null)
     {
         parent::__construct(\sprintf(
-            'No client FQCN "%s" are registered in api',
-            $queryClassName
+            'No client FQCN "%s" are registered.',
+            $clientClassName
         ), $code, $previous);
     }
 }

@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ApiClient;
+namespace LazyHttpClientBundle\Client;
 
-use App\ApiClient\Exception\ClientNotFoundException;
-use App\ApiClient\Interfaces\ClientInterface;
+use LazyHttpClientBundle\Exception\ClientNotFoundException;
+use LazyHttpClientBundle\Interfaces\ClientInterface;
 
 /**
  * Class ApiClientManager
  */
 class Manager
 {
-    public const TAG = 'api_client.client';
+    public const TAG = 'lazy_http_client.client';
 
     /**
      * @var ClientInterface[]
@@ -46,6 +46,7 @@ class Manager
         if (!isset($this->clients[$name])) {
             throw new ClientNotFoundException($name);
         }
+
         return $this->clients[$name];
     }
 }

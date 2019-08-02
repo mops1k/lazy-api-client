@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\ApiClient\Manager;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
+use LazyHttpClientBundle\Client\Manager;
 use App\ReqresFakeApi\Client;
 use App\ReqresFakeApi\Query\ListUsersQuery;
 use App\ReqresFakeApi\Query\SingleUserQuery;
-use App\ReqresFakeApi\StringResponse;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -48,11 +49,11 @@ class ApiTestCommand extends Command
      * @param OutputInterface $output
      *
      * @return int|void|null
-     * @throws \App\ApiClient\Exception\ClientNotFoundException
+     * @throws \LazyHttpClientBundle\Exception\ClientNotFoundException
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $client  = $this->apiClientManager->get(Client::class);
+        $client = $this->apiClientManager->get(Client::class);
         $client->use(ListUsersQuery::class);
         $listResult = $client->execute();
 

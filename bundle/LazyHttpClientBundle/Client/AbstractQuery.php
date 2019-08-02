@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ApiClient;
+namespace LazyHttpClientBundle\Client;
 
-use App\ApiClient\Interfaces\ClientInterface;
-use App\ApiClient\Interfaces\QueryInterface;
-use App\ApiClient\Interfaces\RequestMethodInterface;
+use LazyHttpClientBundle\Interfaces\ClientInterface;
+use LazyHttpClientBundle\Interfaces\QueryInterface;
+use LazyHttpClientBundle\Interfaces\RequestMethodInterface;
+use LazyHttpClientBundle\Client\Request;
 
 /**
  * Class AbstractQuery

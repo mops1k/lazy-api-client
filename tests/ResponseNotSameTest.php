@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\ApiClient\Manager;
+use LazyHttpClientBundle\Client\Manager;
 use App\ReqresFakeApi\Client;
 use App\ReqresFakeApi\Query\ListUsersQuery;
 use App\ReqresFakeApi\Query\SingleUserQuery;
+use LazyHttpClientBundle\Exception\ClientNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -15,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class ResponseNotSameTest extends KernelTestCase
 {
     /**
-     * @throws \App\ApiClient\Exception\ClientNotFoundException
+     * @throws ClientNotFoundException
      */
     public function testResponse()
     {

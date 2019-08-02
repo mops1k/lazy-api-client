@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ApiClient;
+namespace LazyHttpClientBundle\Client;
 
-use App\ApiClient\Exception\ResponseNotFoundException;
-use App\ApiClient\Interfaces\QueryInterface;
+use GuzzleHttp\Exception\ClientException;
+use LazyHttpClientBundle\Exception\ResponseNotFoundException;
+use LazyHttpClientBundle\Interfaces\QueryInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Request;
@@ -26,7 +27,7 @@ class HttpQueue
     private $httpClients = [];
 
     /**
-     * @var ResponseInterface[]
+     * @var array
      */
     private $responses = [];
 
@@ -37,7 +38,7 @@ class HttpQueue
      */
     public function add(QueryInterface $query): void
     {
-        $this->pool[] = $query;
+        $this->pool[$query->getHashKey()] = clone $query;
     }
 
     /**
@@ -47,13 +48,13 @@ class HttpQueue
     {
         /** @var PromiseInterface[] $promises */
         $promises = [];
-        foreach ($this->pool as $query) {
-            if (\array_key_exists($query->getHashKey(), $this->responses)) {
+        foreach ($this->pool as $key => $query) {
+            if (\array_key_exists($key, $this->responses)) {
                 continue;
             }
 
             $uri = $query->buildUri();
-            if (!\array_key_exists($query->getHashKey(), $this->httpClients)) {
+            if (!\array_key_exists(\get_class($query->getClient()), $this->httpClients)) {
                 $this->httpClients[\get_class($query->getClient())] = new Client(\array_merge([
                     'base_uri' => $query->getClient()->getBaseUri()
                 ], $query->getClient()->getOptions()));
@@ -63,19 +64,26 @@ class HttpQueue
             $httpRequest = new Request($query->getMethod(), $uri, $request->getHeaders()->all(), $request->getBody());
 
             $promise = $this->httpClients[\get_class($query->getClient())]->sendAsync($httpRequest, $query->getRequest()->getOptions());
-            $promise->then(function (ResponseInterface $response) use ($query) {
-                $this->responses[$query->getHashKey()] = [
+            $promise->then(function (ResponseInterface $response) use ($key) {
+                $this->responses[$key] = [
                     'headers' => $response->getHeaders(),
                     'statusCode' => $response->getStatusCode(),
                     'content' => $response->getBody()->getContents(),
                     $response
+                ];
+            }, function (ClientException $reason) use ($key) {
+                $response = $reason->getResponse();
+                $this->responses[$key] = [
+                    'headers' => $response ? $response->getHeaders() : [],
+                    'statusCode' => $response ? $response->getStatusCode() : $reason->getCode(),
+                    'content' => $response ? $response->getBody()->getContents() : $reason->getMessage(),
                 ];
             });
             $promises[] = $promise;
         }
 
         foreach ($promises as $promise) {
-            $promise->wait(true);
+            $promise->wait(false);
         }
 
         // clear pool and clients after execute
@@ -84,20 +92,20 @@ class HttpQueue
     }
 
     /**
-     * Returns response for executed query
+     * Returns response for executed query key
      *
-     * @param QueryInterface $query
+     * @param string $key
      *
      * @return array
      *
      * @throws ResponseNotFoundException
      */
-    public function getResponseForQuery(QueryInterface $query): array
+    public function getResponseForKey(string $key): array
     {
-        if (!\array_key_exists($query->getHashKey(), $this->responses)) {
+        if (!\array_key_exists($key, $this->responses)) {
             throw new ResponseNotFoundException();
         }
 
-        return $this->responses[$query->getHashKey()];
+        return $this->responses[$key];
     }
 }

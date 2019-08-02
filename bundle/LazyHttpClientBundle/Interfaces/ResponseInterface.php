@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ApiClient\Interfaces;
+namespace LazyHttpClientBundle\Interfaces;
 
 /**
  * Class ResponseInterface

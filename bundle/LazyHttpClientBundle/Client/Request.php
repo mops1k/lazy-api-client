@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ApiClient;
+namespace LazyHttpClientBundle\Client;
 
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\ParameterBag;

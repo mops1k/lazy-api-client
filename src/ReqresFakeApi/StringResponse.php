@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\ReqresFakeApi;
 
-use App\ApiClient\AbstractResponse;
+use LazyHttpClientBundle\Client\AbstractResponse;
 
 /**
  * Class StringResponse

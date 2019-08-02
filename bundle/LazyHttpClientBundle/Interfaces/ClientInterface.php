@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ApiClient\Interfaces;
+namespace LazyHttpClientBundle\Interfaces;
 
+use LazyHttpClientBundle\Interfaces\QueryInterface;
+use LazyHttpClientBundle\Interfaces\ResponseInterface;
 use ProxyManager\Proxy\GhostObjectInterface;
 
 /**

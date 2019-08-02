@@ -1,13 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ApiClient;
+namespace LazyHttpClientBundle\Client;
 
-use App\ApiClient\Exception\ClientNotSupportedException;
-use App\ApiClient\Exception\QueryNotFoundException;
-use App\ApiClient\Interfaces\ClientInterface;
-use App\ApiClient\Interfaces\QueryInterface;
-use App\ApiClient\Interfaces\ResponseInterface;
+use LazyHttpClientBundle\Exception\ClientNotSupportedException;
+use LazyHttpClientBundle\Exception\QueryNotFoundException;
+use LazyHttpClientBundle\Interfaces\ClientInterface;
+use LazyHttpClientBundle\Interfaces\QueryInterface;
+use LazyHttpClientBundle\Interfaces\ResponseInterface;
+use LazyHttpClientBundle\Client\HttpQueue;
+use LazyHttpClientBundle\Client\LazyFactory;
+use LazyHttpClientBundle\Client\QueryContainer;
 use ProxyManager\Proxy\GhostObjectInterface;
 
 /**
@@ -83,9 +86,10 @@ abstract class AbstractClient implements ClientInterface
      */
     public function execute(): GhostObjectInterface
     {
-        $this->pool->add($this->query);
+        $clonedClient = clone $this;
+        $this->pool->add($clonedClient->query);
 
-        return $this->lazyFactory->create(clone $this);
+        return $this->lazyFactory->create($clonedClient);
     }
 
     /**

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\ReqresFakeApi\Query;
 
-use App\ApiClient\AbstractQuery as BaseAbstractQuery;
+use LazyHttpClientBundle\Client\AbstractQuery as BaseAbstractQuery;
 use App\ReqresFakeApi\Client;
 use App\ReqresFakeApi\StringResponse;
 

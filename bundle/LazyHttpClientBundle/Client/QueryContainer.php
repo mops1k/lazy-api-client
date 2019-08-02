@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ApiClient;
+namespace LazyHttpClientBundle\Client;
 
-use App\ApiClient\Exception\QueryNotFoundException;
-use App\ApiClient\Interfaces\QueryInterface;
+use LazyHttpClientBundle\Exception\QueryNotFoundException;
+use LazyHttpClientBundle\Interfaces\QueryInterface;
 
 /**
  * Class QueryContainerInterface
  */
 class QueryContainer
 {
-    public const TAG = 'api_client.query';
+    public const TAG = 'lazy_http_client.query';
 
     /**
      * @var QueryInterface[]

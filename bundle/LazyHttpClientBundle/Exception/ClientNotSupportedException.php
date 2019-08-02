@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ApiClient\Exception;
+namespace LazyHttpClientBundle\Exception;
 
-use App\ApiClient\Interfaces\ApiExceptionInterface;
-use App\ApiClient\Interfaces\ClientInterface;
-use App\ApiClient\Interfaces\QueryInterface;
+use LazyHttpClientBundle\Interfaces\ApiExceptionInterface;
+use LazyHttpClientBundle\Interfaces\ClientInterface;
+use LazyHttpClientBundle\Interfaces\QueryInterface;
 use Throwable;
 
 /**

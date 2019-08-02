@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ApiClient;
+namespace LazyHttpClientBundle\Client;
 
-use App\ApiClient\Interfaces\ClientInterface;
-use App\ApiClient\Interfaces\QueryInterface;
-use App\ApiClient\Interfaces\ResponseInterface;
+use LazyHttpClientBundle\Interfaces\ClientInterface;
+use LazyHttpClientBundle\Interfaces\QueryInterface;
+use LazyHttpClientBundle\Interfaces\ResponseInterface;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
 use ProxyManager\Proxy\GhostObjectInterface;
 
@@ -14,11 +14,6 @@ use ProxyManager\Proxy\GhostObjectInterface;
  */
 class LazyFactory
 {
-    /**
-     * @var \Closure
-     */
-    private $initializer;
-
     /**
      * @var LazyLoadingGhostFactory
      */
@@ -49,18 +44,19 @@ class LazyFactory
      */
     public function create(ClientInterface $client): GhostObjectInterface
     {
+        $key = $client->getCurrentQuery()->getHashKey();
         $initializer = function (
             GhostObjectInterface $ghostObject,
             string $method,
             array $parameters,
             &$initializer,
             array $properties
-        ) use ($client) {
-            /** @var ResponseInterface $ghostObject */
+        ) use ($key) {
+            /** @var ResponseInterface|GhostObjectInterface $ghostObject */
             $initializer = null;
 
             $this->apiPool->execute();
-            $response = $this->apiPool->getResponseForQuery($client->getCurrentQuery());
+            $response = $this->apiPool->getResponseForKey($key);
 
             $properties["\0*\0content"]    = $response['content'];
             $properties["\0*\0statusCode"] = $response['statusCode'];
@@ -69,6 +65,6 @@ class LazyFactory
             return true;
         };
 
-        return clone $this->lazyFactory->createProxy($client->getCurrentQuery()->getResponseClassName(), $initializer);
+        return $this->lazyFactory->createProxy($client->getCurrentQuery()->getResponseClassName(), $initializer);
     }
 }

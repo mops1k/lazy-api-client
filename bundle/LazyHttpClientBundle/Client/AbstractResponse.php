@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\ApiClient;
+namespace LazyHttpClientBundle\Client;
 
-use App\ApiClient\Interfaces\ResponseInterface;
+use LazyHttpClientBundle\Interfaces\ResponseInterface;
 
 /**
  * Class AbstractResponse
