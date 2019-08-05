@@ -1,0 +1,2 @@
+lazy_http_client:
+    cache_adapter: ~
