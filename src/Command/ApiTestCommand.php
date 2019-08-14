@@ -6,7 +6,6 @@ namespace App\Command;
 use LazyHttpClientBundle\Client\Manager;
 use App\ReqresFakeApi\Client;
 use App\ReqresFakeApi\Query\ListUsersQuery;
-use App\ReqresFakeApi\Query\SingleUserQuery;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -52,22 +51,17 @@ class ApiTestCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $client = $this->apiClientManager->get(Client::class);
+
         $client->use(ListUsersQuery::class);
         $listResult = $client->execute();
 
-        $client = $this->apiClientManager->get(Client::class);
-        $client->use(ListUsersQuery::class);
         $request = $client->getCurrentQuery()->getRequest();
         $request->getParameters()->set('page', 2);
         $listResult2 = $client->execute();
 
-        $client->use(SingleUserQuery::class);
-        $request = $client->getCurrentQuery()->getRequest();
-        $request->getParameters()->set('id', 11);
-        $singleUserResult = $client->execute();
-
-        var_dump($listResult->getContent());
         var_dump($listResult2->getContent());
-        var_dump($singleUserResult->getContent());
+        var_dump($listResult->getContent());
+
+        var_dump($listResult->getContent() === $listResult2->getContent());
     }
 }
